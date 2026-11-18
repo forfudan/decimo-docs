@@ -30,6 +30,10 @@ now lives on another page is pointed at that page. A relative link to a file
 in the decimo repository is pointed at GitHub. A link to an anchor that does
 not exist stops the script, so a broken link cannot reach the site.
 
+Each page also gets two notes: what its examples assume (the prelude), under
+the title, and where it comes from (the decimo ref and its line in the
+manual), at the end.
+
 Only the Python standard library is used.
 """
 
@@ -52,7 +56,8 @@ FENCE = re.compile(r"^\s{0,3}(`{3,}|~{3,})")
 COMMENT = re.compile(r"<!--.*?-->", re.S)
 CODE_SPAN = re.compile(r"(`+)(.+?)\1")
 LINK = re.compile(r'(!?)\[([^\]]*)\]\(([^)\s]+)((?:\s+"[^"]*")?)\)')
-LINK_DEF = re.compile(r"^(\s{0,3}\[[^\]]+\]:\s*)(\S+)(.*)$")
+# A link definition, `[name]: url`. A footnote, `[^name]: text`, is not one.
+LINK_DEF = re.compile(r"^(\s{0,3}\[(?!\^)[^\]]+\]:\s*)(\S+)(.*)$")
 
 
 class SplitError(Exception):
@@ -322,8 +327,34 @@ HEADER = (
     "     Edit the manual there, not this file. -->\n\n"
 )
 
+# Readers often land on a page from a search, so a page with examples says
+# what they assume. A page that imports the prelude itself does not need it.
+PRELUDE_NOTE = (
+    '<p class="page-note">Examples on this page assume '
+    "<code>from decimo.prelude import *</code> and run inside "
+    "<code>def main() raises:</code>.</p>"
+)
 
-def write(pages, out):
+# Where the page comes from: the manual at the line the page starts, and the
+# decimo branch or tag the book was built from.
+SOURCE_NOTE = (
+    '<p class="page-source">Built from <a href="https://github.com/%s/tree/%s">'
+    "decimo <code>%s</code></a>. "
+    '<a href="https://github.com/%s/blob/%s/%s?plain=1#L%d">'
+    "This page in the manual</a>.</p>"
+)
+
+
+def notes(page, lines, ref):
+    """Adds the prelude note under the first heading, and the source note."""
+    code = "\n".join(l for l, c in page["lines"] if c)
+    if "```mojo" in code and "from decimo.prelude import" not in code:
+        first = next(i for i, l in enumerate(lines) if HEADING.match(l))
+        lines[first + 1 : first + 1] = ["", PRELUDE_NOTE]
+    lines += ["", SOURCE_NOTE % (REPO, ref, ref, REPO, ref, MANUAL, page["line"])]
+
+
+def write(pages, out, ref):
     if os.path.isdir(out):
         for base, _, names in os.walk(out):
             for name in names:
@@ -339,6 +370,7 @@ def write(pages, out):
             lines.pop(0)
         while lines and not lines[-1].strip():
             lines.pop()
+        notes(page, lines, ref)
         path = os.path.join(out, *page["file"].split("/"))
         os.makedirs(os.path.dirname(path), exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
@@ -358,7 +390,7 @@ def split(text, out, ref):
             where[anchor] = (page["file"], slug, anchor == page["first_anchor"])
     for page in pages:
         relink(page, where, ref)
-    write(pages, out)
+    write(pages, out, ref)
     return pages
 
 

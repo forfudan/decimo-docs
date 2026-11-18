@@ -1,6 +1,6 @@
 name: Build the book
 
-# Cloudflare Pages builds and serves the site (see README.md). This workflow
+# A Cloudflare Worker builds and serves the site (see README.md). This workflow
 # only checks that the book builds. Cloudflare rebuilds the site by itself on a
 # push here; decimo calls its deploy hook when the manual changes there.
 on:

@@ -2,3 +2,42 @@
    of yumete-docs. */
 .content main { max-width: 46em; }
 .content p, .content li { line-height: 1.8; }
+
+/* The two notes that scripts/split_manual.py adds to a page: what the
+   examples assume, under the title, and where the page comes from, at the
+   end. */
+.content .page-note {
+  font-size: 0.9em;
+  border-left: 3px solid var(--quote-border);
+  padding-left: 0.8em;
+}
+.content .page-source {
+  font-size: 0.9em;
+  margin-top: 3em;
+  padding-top: 1em;
+  border-top: 1px solid var(--table-border-color);
+}
+
+/* On a phone, long code lines wrap, so the comment at the end of a line,
+   which holds the result, stays in view. */
+@media (max-width: 600px) {
+  pre > code {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+  }
+}
+
+/* Paper is white and browsers do not print backgrounds, so print in the ink
+   of the light theme whichever theme is on screen. */
+@media print {
+  html.coal {
+    --fg: #2A2923;
+    --links: #6B5426;
+    --inline-code-color: #B3241B;
+    --quote-border: #d1ccbc;
+    --table-border-color: #d1ccbc;
+  }
+  html.coal .hljs {
+    color: #2A2923;
+  }
+}

@@ -39,9 +39,11 @@ reloads the page.
 | `book.toml` | the mdBook settings |
 | `scripts/split_manual.py` | cuts the manual into `src/` and writes `src/SUMMARY.md` |
 | `scripts/build.sh` | runs the split, then `mdbook build`; fails on any mdbook warning |
-| `theme/index.hbs` | mdBook's own template with two changes (see below) |
+| `theme/index.hbs` | mdBook's own template with three changes (see below) |
 | `theme/ink.css` | the Ink colours, light and dark |
-| `theme/custom.css` | the reading width and the line height |
+| `theme/custom.css` | the reading width, the line height, the page notes, code wrapping on phones, and printing |
+| `theme/head.hbs` | link-preview tags for every page |
+| `theme/favicon.svg` | the tab icon |
 | `src/` | the pages; written by the script, not committed |
 | `.github/workflows/build.yml` | checks that the book builds |
 
@@ -70,6 +72,13 @@ manual is pointed at the page that now holds that heading. A relative link to
 a file in decimo is pointed at GitHub. A link to an anchor that does not exist
 stops the build.
 
+The script also adds two notes to each page. Under the title, a page with
+Mojo examples says that they assume `from decimo.prelude import *` (unless
+the page imports the prelude itself). At the end, every page says which
+decimo branch or tag it was built from and links to its line in the manual.
+After the build, `scripts/build.sh` writes `sitemap.xml` and `robots.txt`
+from `src/SUMMARY.md`.
+
 A new section in the manual that has no `page` comment becomes part of the
 page above it. To give it a page of its own, add a `page` comment above its
 heading.
@@ -88,22 +97,24 @@ The Ink theme comes from
 [yumete-docs](https://github.com/forfudan/yumete-docs): the colours in
 `theme/ink.css` and the reading width in `theme/custom.css`.
 
-`theme/index.hbs` is the default template of mdBook v0.5.4 with two changes,
-each marked with a `decimo-docs edit` comment:
+`theme/index.hbs` is the default template of mdBook v0.5.4 with three
+changes, each marked with a `decimo-docs edit` comment:
 
-1. The theme menu offers only Ink and Ink dark. They are mdBook's `light` and
-   `coal` themes, recoloured by `ink.css`.
+1. The theme menu offers Auto, Ink and Ink dark. Ink and Ink dark are
+   mdBook's `light` and `coal` themes, recoloured by `ink.css`; Auto follows
+   the system setting.
 2. ```` ```mojo ```` blocks are coloured as Python, because highlight.js has no
    Mojo.
+3. The browser bar takes the page's colours instead of white.
 
 The template has to match the mdBook version. To move to a new mdBook:
 
 ```sh
 mdbook init --theme /tmp/fresh        # with the new mdbook; answer the questions
-diff /tmp/fresh/theme/index.hbs theme/index.hbs   # shows only the two edits
+diff /tmp/fresh/theme/index.hbs theme/index.hbs   # shows only the three edits
 ```
 
-Copy the new `index.hbs` over ours, apply the two edits again, change
+Copy the new `index.hbs` over ours, apply the three edits again, change
 `MDBOOK_VERSION` in `scripts/build.sh`, and check that `ink.css` covers any
 new colour variables in the new `css/variables.css`.
 

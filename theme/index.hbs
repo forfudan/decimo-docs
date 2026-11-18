@@ -17,7 +17,10 @@
 
         <meta name="description" content="{{ description }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="#ffffff">
+        {{!-- decimo-docs edit 3 of 3: the browser bar in the page's own colours
+             (theme/ink.css) instead of white. --}}
+        <meta name="theme-color" content="#F1EBD9" media="(prefers-color-scheme: light)">
+        <meta name="theme-color" content="#181A1D" media="(prefers-color-scheme: dark)">
 
         {{#if favicon_svg}}
         <link rel="icon" href="{{ resource "favicon.svg" }}">
@@ -150,10 +153,11 @@
                             {{fa "solid" "paintbrush"}}
                         </button>
                         <ul id="mdbook-theme-list" class="theme-popup" aria-label="Themes" role="menu">
-                            {{!-- decimo-docs edit 1 of 2: only the two Ink themes
-                                 (theme/ink.css). The ids stay mdBook's `light` and
-                                 `coal`, so book.js and the saved choice keep working.
-                                 Until a reader picks one, the system setting decides. --}}
+                            {{!-- decimo-docs edit 1 of 3: Auto and the two Ink themes
+                                 (theme/ink.css). The ids stay mdBook's `default_theme`,
+                                 `light` and `coal`, so book.js and the saved choice keep
+                                 working. Auto follows the system setting. --}}
+                            <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-default_theme">Auto</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-light">Ink</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="mdbook-theme-coal">Ink dark</button></li>
                         </ul>
@@ -322,7 +326,7 @@
 
         <script src="{{ resource "clipboard.min.js" }}"></script>
         <script src="{{ resource "highlight.js" }}"></script>
-        {{!-- decimo-docs edit 2 of 2: highlight.js has no Mojo. Mojo reads like
+        {{!-- decimo-docs edit 2 of 3: highlight.js has no Mojo. Mojo reads like
              Python, so ```mojo blocks are coloured as Python. This must run
              before book.js, which colours the code as soon as it loads. --}}
         <script>hljs.registerAliases(["mojo"], { languageName: "python" });</script>
