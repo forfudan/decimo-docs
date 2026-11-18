@@ -111,7 +111,7 @@ def github_slug(text):
 
 
 def mdbook_slug(text):
-    """The anchor mdBook 0.4 gives a heading (`normalize_id`)."""
+    """The anchor mdBook gives a heading (`normalize_id`, the same in 0.4 and 0.5)."""
     out = []
     for ch in plain(text):
         if ch.isalnum() or ch in "_-":

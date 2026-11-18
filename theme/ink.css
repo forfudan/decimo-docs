@@ -1,6 +1,11 @@
 /* The Ink palette of yumete-docs (written there by scripts/palette.mjs from
-   its ink.json), copied as it is. Edit the colours here. */
-.light {
+   its ink.json). Edit the colours here.
+
+   The last block of each theme is for variables that mdBook 0.5 added: the
+   gold of `--sidebar-active` where mdBook uses its blue, and the copy button
+   in the grey of the icons, going to ink on hover. The blockquote colours
+   (GitHub-style alerts) and the overlay keep mdBook's values. */
+.light, html:not(.js) {
   --bg: #F1EBD9;
   --fg: #2A2923;
   --sidebar-bg: #e7e1d0;
@@ -29,6 +34,11 @@
   --searchresults-border-color: #d1ccbc;
   --searchresults-li-bg: #e7e1d0;
   --search-mark-bg: #c9c4b5;
+
+  --footnote-highlight: #6B5426;
+  --sidebar-header-border-color: #6B5426;
+  --copy-button-filter: invert(50%);
+  --copy-button-filter-hover: invert(16%);
 }
 .coal {
   --bg: #181A1D;
@@ -59,4 +69,9 @@
   --searchresults-border-color: #363738;
   --searchresults-li-bg: #212325;
   --search-mark-bg: #3d3e3e;
+
+  --footnote-highlight: #D8C99A;
+  --sidebar-header-border-color: #D8C99A;
+  --copy-button-filter: invert(49%);
+  --copy-button-filter-hover: invert(81%);
 }

@@ -1,7 +1,6 @@
 [book]
 authors = ["ZHU Yuhao"]
 language = "en"
-multilingual = false
 src = "src"
 title = "Decimo"
 description = "The user manual of Decimo, an arbitrary-precision arithmetic library for Mojo"
@@ -13,7 +12,7 @@ create-missing = false
 
 [output.html]
 # The ink theme, from yumete-docs: theme/index.hbs is mdBook's own template
-# (v0.4.40) with a theme menu of Ink and Ink dark only, and with Mojo code
+# (v0.5.4) with a theme menu of Ink and Ink dark only, and with Mojo code
 # coloured as Python. mdBook reads theme/ by default.
 default-theme = "light"
 preferred-dark-theme = "coal"
