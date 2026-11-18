@@ -1,0 +1,4 @@
+/* What the book needs beside the colours: the reading width and line height
+   of yumete-docs. */
+.content main { max-width: 46em; }
+.content p, .content li { line-height: 1.8; }

@@ -1,0 +1,42 @@
+name: Build the book
+
+# Cloudflare Pages builds and serves the site (see README.md). This workflow
+# only checks that the book builds, and, once a day, asks Cloudflare to build
+# again, so that a change to the manual in decimo reaches the site without a
+# push here.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "17 3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # The manual comes from decimo main. No mdbook is installed here, so the
+      # script downloads the pinned release.
+      - name: Split the manual and build the book
+        run: bash scripts/build.sh
+
+      # Set the repository secret CLOUDFLARE_DEPLOY_HOOK to the deploy hook URL
+      # of the Cloudflare Pages project. Without it, this step does nothing.
+      - name: Ask Cloudflare to rebuild
+        if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+        env:
+          HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: |
+          if [ -n "$HOOK" ]; then
+            curl -sSf -X POST "$HOOK" > /dev/null
+            echo "Cloudflare will rebuild the site."
+          else
+            echo "No CLOUDFLARE_DEPLOY_HOOK secret; nothing to do."
+          fi

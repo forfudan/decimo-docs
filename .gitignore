@@ -1,0 +1,8 @@
+# What `mdbook build` writes.
+book/
+# The pages: scripts/split_manual.py writes them from decimo's user manual on
+# every build, so they are never committed.
+src/
+# The downloaded mdbook and the last build log (scripts/build.sh).
+.cache/
+.DS_Store

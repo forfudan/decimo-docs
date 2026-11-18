@@ -1,0 +1,38 @@
+[book]
+authors = ["ZHU Yuhao"]
+language = "en"
+multilingual = false
+src = "src"
+title = "Decimo"
+description = "The user manual of Decimo, an arbitrary-precision arithmetic library for Mojo"
+
+[build]
+# src/ is written by scripts/split_manual.py from decimo's user manual. A page
+# that SUMMARY.md lists and src/ lacks is an error, not a new empty page.
+create-missing = false
+
+[output.html]
+# The ink theme, from yumete-docs: theme/index.hbs is mdBook's own template
+# (v0.4.40) with a theme menu of Ink and Ink dark only, and with Mojo code
+# coloured as Python. mdBook reads theme/ by default.
+default-theme = "light"
+preferred-dark-theme = "coal"
+additional-css = ["theme/ink.css", "theme/custom.css"]
+# The manual numbers its own parts ("Part I"), so mdBook does not number them.
+no-section-label = true
+git-repository-url = "https://github.com/forfudan/decimo"
+# Every page comes from the one manual, so every "edit" button opens it.
+edit-url-template = "https://github.com/forfudan/decimo/edit/main/docs/user_manual.md"
+# The site is served at the root of decimo.mojo-lang.com. The 404 page uses
+# `site-url` to find the styles. `cname` writes a CNAME file, which only GitHub
+# Pages reads; Cloudflare ignores it.
+site-url = "/"
+cname = "decimo.mojo-lang.com"
+
+[output.html.fold]
+# A part opens when you are on one of its pages.
+enable = true
+level = 0
+
+[output.html.search]
+enable = true
