@@ -1,0 +1,14 @@
+// Cloudflare Workers static-assets deploy for the book.
+//
+// `scripts/build.sh` writes the book to `book/`. Without this file, Wrangler
+// would guess the output folder.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "decimo-docs",
+  "compatibility_date": "2026-11-18",
+  "assets": {
+    "directory": "./book",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}

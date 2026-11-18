@@ -107,32 +107,29 @@ Copy the new `index.hbs` over ours, apply the two edits again, change
 `MDBOOK_VERSION` in `scripts/build.sh`, and check that `ink.css` covers any
 new colour variables in the new `css/variables.css`.
 
-## Deploying to Cloudflare Pages
+## Deploying to Cloudflare
 
-Cloudflare builds the site from this repository and serves it.
+Cloudflare builds the site from this repository and serves it as a Worker
+with static assets. `wrangler.jsonc` tells it to serve the `book/` folder.
 
-1. Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** →
-   **Connect to Git**. Pick this repository.
+1. Cloudflare dashboard → **Workers & Pages** → **Create** → import this
+   repository.
 2. Build settings:
-   - Framework preset: **None**
    - Build command: `bash scripts/build.sh`
-   - Build output directory: `book`
-   - Root directory: `/`
+   - Deploy command: `npx wrangler deploy`
    - Optional variable `DECIMO_REF`: the decimo branch or tag to build from
      (default `main`).
-3. Save and deploy. Each push to `main` rebuilds the site. Other branches get
-   preview URLs.
-4. **Custom domains** → **Set up a domain** → `decimo.mojo-lang.com`. If the
-   DNS of `mojo-lang.com` is on Cloudflare, it adds the record itself.
-   Otherwise, add the `CNAME` record that Cloudflare shows.
+3. Save and deploy. Each push to `main` rebuilds the site.
+4. **Settings** → **Domains & Routes** → add the custom domain
+   `decimo.mojo-lang.com`. If the DNS of `mojo-lang.com` is on Cloudflare, it
+   adds the record itself.
 
 A change to the manual in decimo does not push anything here. To bring it to
-the site, create a deploy hook in the Pages project (**Settings** →
-**Builds & deployments** → **Deploy hooks**) and save its URL as the secret
-`CLOUDFLARE_DEPLOY_HOOK` in the **decimo** repository. decimo's workflow
-`.github/workflows/rebuild_book.yaml` calls it when `docs/user_manual.md`
-changes on `main`. A **Retry deployment** in the Cloudflare dashboard does the
-same by hand.
+the site, create a deploy hook in the Worker's build settings, if Cloudflare
+offers one, and save its URL as the secret `CLOUDFLARE_DEPLOY_HOOK` in the
+**decimo** repository. decimo's workflow `.github/workflows/rebuild_book.yaml`
+calls it when `docs/user_manual.md` changes on `main`. Retrying the latest
+build in the Cloudflare dashboard does the same by hand.
 
 The build needs the `mdbook:` comments in the manual. A decimo branch without
 them stops the split with "no `mdbook: page` comment in the manual".
