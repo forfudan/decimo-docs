@@ -44,6 +44,8 @@ reloads the page.
 | `theme/custom.css` | the reading width, the line height, the page notes, code wrapping on phones, and printing |
 | `theme/head.hbs` | link-preview tags for every page |
 | `theme/favicon.svg` | the tab icon |
+| `theme/search-dots.js` | splits a search at dots |
+| `scripts/patch_search.js` | lets the search find a method by its own name |
 | `src/` | the pages; written by the script, not committed |
 | `.github/workflows/build.yml` | checks that the book builds |
 
@@ -78,6 +80,13 @@ the page imports the prelude itself). At the end, every page says which
 decimo branch or tag it was built from and links to its line in the manual.
 After the build, `scripts/build.sh` writes `sitemap.xml` and `robots.txt`
 from `src/SUMMARY.md`.
+
+mdBook's search splits words only at spaces and dashes, so `x.bit_length()`
+would be found only as `x.bit_length`. After the build,
+`scripts/patch_search.js` (Node) also stores each part of a word that starts
+after a dot or an underscore: `bit_length` and `length`, `divmod` for
+`a.__divmod__`. `theme/search-dots.js` splits a typed query the same way, so
+`BInt.bit_length` works too.
 
 A new section in the manual that has no `page` comment becomes part of the
 page above it. To give it a page of its own, add a `page` comment above its

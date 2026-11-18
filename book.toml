@@ -17,6 +17,8 @@ create-missing = false
 default-theme = "light"
 preferred-dark-theme = "coal"
 additional-css = ["theme/ink.css", "theme/custom.css"]
+# A search splits its words at dots too (see the file).
+additional-js = ["theme/search-dots.js"]
 # The manual numbers its own parts ("Part I"), so mdBook does not number them.
 no-section-label = true
 git-repository-url = "https://github.com/forfudan/decimo"

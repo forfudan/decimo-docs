@@ -61,6 +61,15 @@ if grep -E 'WARN|ERROR' .cache/build.log > /dev/null; then
     echo "build.sh: mdbook printed a warning; see above" >&2
     exit 1
 fi
+# The search finds a method by its own name: `bit_length` finds
+# `x.bit_length()` (see scripts/patch_search.js). Node is on the Cloudflare
+# build image, which needs it for wrangler.
+if ! command -v node > /dev/null; then
+    echo "build.sh: node is needed to patch the search index; install Node.js" >&2
+    exit 1
+fi
+node scripts/patch_search.js book
+
 # A sitemap and a robots.txt for search engines, from the pages SUMMARY.md
 # lists. A page `a/index.md` is served at `a/`, any other `a/b.md` at `a/b`.
 python3 - <<'PY'
