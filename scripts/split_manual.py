@@ -262,26 +262,23 @@ def relink(page, where, ref):
         out = "https://github.com/%s/blob/%s/%s" % (REPO, ref, path)
         return out + ("#" + frag if frag else "")
 
-    def links(text):
-        return LINK.sub(
-            lambda m: "%s[%s](%s%s)"
-            % (m.group(1), m.group(2), target(m.group(3), m.group(1)), m.group(4)),
-            text,
-        )
-
     def one_line(line):
         d = LINK_DEF.match(line)
         if d:
             return d.group(1) + target(d.group(2), False) + d.group(3)
-        # Code spans are left alone: `x[i](#y)` in code is not a link.
-        parts = []
-        pos = 0
-        for m in CODE_SPAN.finditer(line):
-            parts.append(links(line[pos : m.start()]))
-            parts.append(m.group(0))
-            pos = m.end()
-        parts.append(links(line[pos:]))
-        return "".join(parts)
+        # A link that starts inside a code span is left alone: `x[i](#y)` in
+        # code is not a link. A code span inside a link's text, as in
+        # [`mgit.mojo`](../examples/mgit.mojo), is part of the link.
+        spans = [m.span() for m in CODE_SPAN.finditer(line)]
+
+        def one(m):
+            if any(a <= m.start() < b for a, b in spans):
+                return m.group(0)
+            return "%s[%s](%s%s)" % (
+                m.group(1), m.group(2), target(m.group(3), m.group(1)), m.group(4)
+            )
+
+        return LINK.sub(one, line)
 
     page["lines"] = [(l if code else one_line(l), code) for l, code in page["lines"]]
 
