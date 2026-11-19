@@ -46,6 +46,7 @@ reloads the page.
 | `theme/favicon.svg` | the tab icon |
 | `theme/search-dots.js` | splits a search at dots |
 | `scripts/patch_search.js` | lets the search find a method by its own name |
+| `redirects.txt` | old page paths and where they moved |
 | `src/` | the pages; written by the script, not committed |
 | `.github/workflows/build.yml` | checks that the book builds |
 
@@ -76,7 +77,7 @@ stops the build.
 
 The script also adds two notes to each page. Under the title, a page with
 Mojo examples says that they assume `from decimo.prelude import *` (unless
-the page imports the prelude itself). At the end, every page says which
+the page already mentions the prelude). At the end, every page says which
 decimo branch or tag it was built from and links to its line in the manual.
 After the build, `scripts/build.sh` writes `sitemap.xml` and `robots.txt`
 from `src/SUMMARY.md`.
@@ -87,6 +88,11 @@ would be found only as `x.bit_length`. After the build,
 after a dot or an underscore: `bit_length` and `length`, `divmod` for
 `a.__divmod__`. `theme/search-dots.js` splits a typed query the same way, so
 `BInt.bit_length` works too.
+
+When a page is renamed or merged, add its old path to `redirects.txt`. The
+build then writes a page at the old path that sends readers to the new one.
+It does so only once the old page is gone, so the two repositories can change
+in either order.
 
 A new section in the manual that has no `page` comment becomes part of the
 page above it. To give it a page of its own, add a `page` comment above its

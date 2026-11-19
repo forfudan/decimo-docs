@@ -1,0 +1,19 @@
+# Pages that were renamed or merged into another page, as "old new". The
+# build writes a small page at each old path that sends the reader to the new
+# one, but only once the old page is gone, so this file and the manual can
+# change in either order.
+bigint/arithmetic.html bigint/operators.html#arithmetic
+bigint/comparison.html bigint/operators.html#comparison
+bigint/bitwise.html bigint/operators.html#bitwise
+bigint/shift.html bigint/operators.html#shift
+bigint/number-theory.html bigint/math.html#number-theory
+bigint/query.html bigint/conversion.html#query-methods
+bigint/constants.html bigint/conversion.html#constants-and-factory-methods
+decimal/rounding-mode.html decimal/rounding.html#roundingmode
+decimal/result-exponents.html decimal/arithmetic.html#result-exponents-decimal-and-dec128
+decimal/small-argument.html decimal/near-zero.html
+decimal/chinese-numerals.html tools/chinese-numerals.html
+decimal/expression-engine.html tools/expression-engine.html
+bigfloat/bases-and-exact-answers.html bigfloat/bases.html
+bigfloat/point-in-the-plane.html bigfloat/hypot-arctan2.html
+bigfloat/decimal-in-decimal-out.html bigfloat/decimal-conversion.html

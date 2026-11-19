@@ -328,7 +328,7 @@ HEADER = (
 )
 
 # Readers often land on a page from a search, so a page with examples says
-# what they assume. A page that imports the prelude itself does not need it.
+# what they assume. A page that already mentions the prelude does not need it.
 PRELUDE_NOTE = (
     '<p class="page-note">Examples on this page assume '
     "<code>from decimo.prelude import *</code> and run inside "
@@ -348,7 +348,8 @@ SOURCE_NOTE = (
 def notes(page, lines, ref):
     """Adds the prelude note under the first heading, and the source note."""
     code = "\n".join(l for l, c in page["lines"] if c)
-    if "```mojo" in code and "from decimo.prelude import" not in code:
+    text = "\n".join(l for l, _ in page["lines"])
+    if "```mojo" in code and "from decimo.prelude import" not in text:
         first = next(i for i, l in enumerate(lines) if HEADING.match(l))
         lines[first + 1 : first + 1] = ["", PRELUDE_NOTE]
     lines += ["", SOURCE_NOTE % (REPO, ref, ref, REPO, ref, MANUAL, page["line"])]

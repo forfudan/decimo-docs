@@ -70,6 +70,30 @@ if ! command -v node > /dev/null; then
 fi
 node scripts/patch_search.js book
 
+# A page at each old path in redirects.txt that sends the reader on, once
+# the old page is gone.
+python3 - <<'PY'
+import html, os
+for line in open("redirects.txt", encoding="utf-8"):
+    line = line.strip()
+    if not line or line.startswith("#"):
+        continue
+    old, new = line.split()
+    path = os.path.join("book", old)
+    if os.path.exists(path):
+        continue
+    url = "/" + new
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as out:
+        out.write(
+            '<!DOCTYPE html>\n<meta charset="utf-8">\n<title>Moved</title>\n'
+            '<meta http-equiv="refresh" content="0; url=%s">\n'
+            '<link rel="canonical" href="%s">\n'
+            '<p>This page has moved to <a href="%s">%s</a>.</p>\n'
+            % ((html.escape(url),) * 4)
+        )
+PY
+
 # A sitemap and a robots.txt for search engines, from the pages SUMMARY.md
 # lists. A page `a/index.md` is served at `a/`, any other `a/b.md` at `a/b`.
 python3 - <<'PY'
